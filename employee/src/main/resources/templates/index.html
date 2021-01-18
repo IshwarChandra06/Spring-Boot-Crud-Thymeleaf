@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Management System</title>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+
+</head>
+<body>
+
+</form>
+	<div class="container my-2">
+		<h1>Menu</h1>
+		<br> <a th:href="@{/menu}">Go to home page</a> <br> <br>
+
+		<h2>Eikona Employees Table</h2>
+		<br> <br>
+		<ul type="circle">
+
+			<li><a th:href="@{/department}">Department Table</a></li>
+			<li><a th:href="@{/employee}">Employee Table</a></li>
+			<br>
+		</ul>
+		<h2>EXPORT EXCEL</h2>
+		<br> <a th:href="@{/employee/export/excel}">Export to Excel</a><br>
+		<br> <br> <br> <br>
+		<h2>Employee Table</h2>
+		<table border="1" class="table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Employee First Name</th>
+					<th>Employee Last Name</th>
+					<th>Employee Email</th>
+					<th>Department</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="employee : ${responseEntity.employee}">
+					<td th:text="${employee.id}"></td>
+					<td th:text="${employee.firstName}"></td>
+					<td th:text="${employee.lastName}"></td>
+					<td th:text="${employee.email}"></td>
+					<td th:text="${employee.dept.name}"></td>
+					<td><a th:href="@{/employee/update/{id}(id=${employee.id})}"
+						class="btn btn-primary">Update</a> <a
+						th:href="@{/employee/delete/{id}(id=${employee.id})}"
+						class="btn btn-danger">Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<a th:href="@{/employee/new}" class="btn btn-primary btn-sm mb-3">
+			Add Employee </a>
+	</div>
+	
+	 <div class="row" style="text-align:center;margin:50px;">
+        <div th:if="${responseEntity.page['totalPages'] > 1}">
+            <div>
+                Total Items: [[${responseEntity.page['totalPages']}]]
+            </div>
+            <div>
+                <span th:each="i: ${#numbers.sequence(1, responseEntity.page['totalPages'])}">
+                    <a th:href="@{'/employee/paginated/' + ${i} + '/2'}"
+                       th:if="${responseEntity.page['currentPage'] != i}">[[${i}]]</a>
+                    <span th:unless="${responseEntity.page['currentPage'] != i}">[[${i}]]</span>
+                </span>
+            </div>
+            <div>
+                <a th:href="@{'/employee/paginated/' + ${responseEntity.page['currentPage'] + 1} + '/2'}"
+                   th:if="${responseEntity.page['currentPage'] < responseEntity.page['totalPages']}">
+                    Next
+                </a>
+                <span th:unless="${responseEntity.page['currentPage'] < responseEntity.page['totalPages']}">Next</span>
+            </div>
+            <div>
+                <a th:href="@{'/employee/paginated/' + ${responseEntity.page['totalPages']} + '/2'}"
+                   th:if="${responseEntity.page['currentPage'] < responseEntity.page['totalPages']}">
+                    Last
+                </a>
+                <span th:unless="${responseEntity.page['currentPage'] < responseEntity.page['totalPages']}">Last</span>
+            </div>
+        </div>
+    </div> 
+
+
+</body>
+</html>
